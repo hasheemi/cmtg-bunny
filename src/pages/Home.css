@@ -1,0 +1,62 @@
+.home-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  z-index: 10;
+  text-align: center;
+  padding: 4rem 5rem;
+}
+
+.logo-placeholder h1 {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #f8fafc, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.logo-placeholder p {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.play-button {
+  padding: 1.2rem 4rem;
+  font-size: 1.5rem;
+}
+
+/* Background floating shapes */
+.bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.shape-1 {
+  width: 400px;
+  height: 400px;
+  background: #db2777;
+  top: -100px;
+  left: -100px;
+  animation: float 10s infinite alternate ease-in-out;
+}
+
+.shape-2 {
+  width: 500px;
+  height: 500px;
+  background: #4f46e5;
+  bottom: -150px;
+  right: -100px;
+  animation: float 12s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 50px) scale(1.1); }
+}
