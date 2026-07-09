@@ -11,15 +11,15 @@
   gap: 2rem;
   z-index: 10;
   width: 100%;
-  max-width: 1000px;
+  /* max-width: 1000px; */
   padding: 0 2rem;
 }
 .book-layout {
   display: flex;
   width: 100%;
-  height: 55vh;
-  min-height: 450px;
-  background: #fdfbf7;
+  height: 80vh;
+  min-height: 600px;
+  background: white;
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.1);
   position: relative;
@@ -30,30 +30,18 @@
 .book-layout.turning {
   transform: scale(0.97) translateY(5px);
 }
-.page {
+.fullscreen-page {
   flex: 1;
-  padding: 3rem;
   position: relative;
   display: flex;
   flex-direction: column;
+  background: white;
 }
-.left-page {
-  background: linear-gradient(to right, #fdfbf7 95%, #e2e8f0 100%);
-  border-right: 1px solid #cbd5e1;
-}
-.right-page {
-  background: linear-gradient(to left, #fdfbf7 95%, #e2e8f0 100%);
-}
-.page-divider {
-  width: 30px;
-  background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.1) 100%);
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  transform: translateX(-50%);
-  box-shadow: inset 5px 0 10px rgba(0,0,0,0.05), inset -5px 0 10px rgba(0,0,0,0.05);
-  z-index: 2;
+.page-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .page-content {
   color: #333;
