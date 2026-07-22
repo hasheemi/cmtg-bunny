@@ -5,12 +5,25 @@ import Act1 from '../components/acts/Act1';
 import Act2 from '../components/acts/Act2';
 import Act3 from '../components/acts/Act3';
 import Act4 from '../components/acts/Act4';
+import PreComic from '../components/acts/PreComic';
+import PostComic from '../components/acts/PostComic';
 
 const acts = [
+  <PreComic key="pre1" actNum={1} />,
   <Act1 key="act1" />,
+  <PostComic key="post1" actNum={1} />,
+  
+  <PreComic key="pre2" actNum={2} />,
   <Act2 key="act2" />,
+  <PostComic key="post2" actNum={2} />,
+  
+  <PreComic key="pre3" actNum={3} />,
   <Act3 key="act3" />,
+  <PostComic key="post3" actNum={3} />,
+  
+  <PreComic key="pre4" actNum={4} />,
   <Act4 key="act4" />,
+  <PostComic key="post4" actNum={4} />,
 ];
 
 const Comic: React.FC = () => {

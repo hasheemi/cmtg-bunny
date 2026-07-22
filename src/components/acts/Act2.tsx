@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import './Acts.css';
+import './Act2.css';
 
 const collectionItems = [
   { id: 'crystal', emoji: '💎', name: 'Crystal' },
@@ -119,8 +119,9 @@ const Act2: React.FC = () => {
   };
 
   return (
-    <div 
-      className="act-container" 
+    <>
+      <div 
+        className="act-container" 
       style={{ position: 'relative' }}
       onTouchMove={handleGlobalTouchMove}
       onTouchEnd={handleGlobalTouchEnd}
@@ -187,6 +188,7 @@ const Act2: React.FC = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

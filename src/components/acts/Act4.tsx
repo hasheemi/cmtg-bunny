@@ -108,58 +108,51 @@ const Act4: React.FC = () => {
     }, 2000);
   };
 
-  // Process next character - ONLY handles 'A'
-  const processNextChar = () => {
-    if (gameStatus !== 'playing' || currentIndex >= currentPattern.length || isProcessingRef.current) {
+  // Process Ketty's automatic turn
+  const processKettyTurn = () => {
+    if (gameStatus !== 'playing' || isAnimating || currentIndex >= currentPattern.length || isProcessingRef.current) {
       return;
     }
 
     const currentChar = currentPattern[currentIndex];
-    setHighlightIndex(currentIndex);
-
-    if (currentChar === 'A') {
-      isProcessingRef.current = true;
-      setIsAnimating(true);
-      setKittyState('jump');
-      setIsBunnyEnabled(false);
-      logEvent(`🐱 Kitty moves (Auto) - Position ${currentIndex + 1}`, 'info');
+    isProcessingRef.current = true;
+    setIsAnimating(true);
+    setKittyState('jump');
+    logEvent(`🐱 Ketty moves (Auto) - Position ${currentIndex + 1} with ${currentChar}`, 'info');
+    
+    timerRef.current = setTimeout(() => {
+      setKittyState('idle');
+      setIsAnimating(false);
+      isProcessingRef.current = false;
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
       
-      timerRef.current = setTimeout(() => {
-        setKittyState('idle');
-        setIsAnimating(false);
-        isProcessingRef.current = false;
-        const newIndex = currentIndex + 1;
-        setCurrentIndex(newIndex);
-        
-        // Check if pattern complete
-        if (newIndex >= currentPattern.length) {
-          timerRef.current = setTimeout(() => {
-            checkPatternComplete();
-          }, 300);
-        }
-        // useEffect akan handle next step
-      }, 600);
-    }
-    // B di-handle oleh useEffect
+      if (newIndex >= currentPattern.length) {
+        timerRef.current = setTimeout(() => {
+          checkPatternComplete();
+        }, 300);
+      }
+    }, 600);
   };
 
-  // Handle Bunny click
-  const handleBunnyClick = () => {
-    console.log('🔍 Bunny clicked - isBunnyEnabled:', isBunnyEnabled, 'gameStatus:', gameStatus);
-    
-    if (!isBunnyEnabled || gameStatus !== 'playing' || isAnimating || currentIndex >= currentPattern.length) {
-      console.log('❌ Bunny click rejected');
+  // Handle Player (Bunny) click
+  const handlePlayerClick = (clickedChar: 'A' | 'B') => {
+    if (gameStatus !== 'playing' || isAnimating || currentIndex >= currentPattern.length || isProcessingRef.current) {
       return;
     }
 
+    // Checking if it's Bunny's turn (odd index)
+    if (currentIndex % 2 === 0) {
+      return; // Ketty's turn!
+    }
+
     const expected = currentPattern[currentIndex];
-    console.log(`🎯 Expected: ${expected}, Current Index: ${currentIndex}`);
     
-    if (expected === 'B') {
+    if (expected === clickedChar) {
       // Correct!
       setBunnyState('jump');
       setIsBunnyEnabled(false);
-      logEvent(`🐰 Bunny clicks! ✅ Correct! (Position ${currentIndex + 1})`, 'success');
+      logEvent(`✅ Correct! Bunny clicks ${clickedChar} (Position ${currentIndex + 1})`, 'success');
       
       timerRef.current = setTimeout(() => {
         setBunnyState('idle');
@@ -171,7 +164,6 @@ const Act4: React.FC = () => {
       
       if (newStreak >= 3) {
         setMessage('🌟 Perfect streak!');
-        logEvent('🔥 3 in a row!', 'success');
       } else {
         setMessage(`✅ Correct! Streak: ${newStreak}/3`);
       }
@@ -180,17 +172,15 @@ const Act4: React.FC = () => {
       setCurrentIndex(newIndex);
       
       if (newIndex >= currentPattern.length) {
-        // Pattern complete - checkPatternComplete akan handle
         timerRef.current = setTimeout(() => {
           checkPatternComplete();
         }, 500);
       }
-      // useEffect akan handle next step
     } else {
       // Wrong!
       setBunnyState('jump');
       setIsBunnyEnabled(false);
-      logEvent(`❌ Wrong! Expected ${expected}, but clicked B`, 'error');
+      logEvent(`❌ Wrong! Expected ${expected}, but clicked ${clickedChar}`, 'error');
       
       timerRef.current = setTimeout(() => {
         setBunnyState('idle');
@@ -203,19 +193,13 @@ const Act4: React.FC = () => {
       setMessage('😅 Wrong! Try again!');
       
       if (newConfidence <= 0) {
-        // Game Over
         setGameStatus('failed');
         setMessage('😢 Game Over! You lost all confidence!');
-        logEvent('💔 Game Over - Confidence lost', 'error');
-        setIsBunnyEnabled(false);
       } else {
-        // Reset position and retry from beginning of pattern
         timerRef.current = setTimeout(() => {
           setCurrentIndex(0);
           setHighlightIndex(-1);
-          setIsBunnyEnabled(false);
           isProcessingRef.current = false;
-          logEvent('🔄 Retry from start of pattern', 'info');
         }, 800);
       }
     }
@@ -232,7 +216,7 @@ const Act4: React.FC = () => {
     
     // Reset index dan biarkan useEffect handle first move
     setCurrentIndex(0);
-    setHighlightIndex(-1);
+    setHighlightIndex(0);
     setIsBunnyEnabled(false);
     isProcessingRef.current = false;
   };
@@ -282,19 +266,18 @@ const Act4: React.FC = () => {
 
   // EFFECT: Handle automatic progression
   useEffect(() => {
-    // Hanya jalan jika game playing, tidak animasi, dan index valid
     if (gameStatus === 'playing' && !isAnimating && currentIndex < currentPattern.length) {
-      const currentChar = currentPattern[currentIndex];
-      console.log(`🔄 Effect running - Index: ${currentIndex}, Char: ${currentChar}, Streak: ${streak}`);
+      setHighlightIndex(currentIndex);
       
-      if (currentChar === 'A') {
-        // Process A automatically
-        processNextChar();
-      } else if (currentChar === 'B') {
-        // Enable Bunny for B
+      const isKettyTurn = currentIndex % 2 === 0;
+      
+      if (isKettyTurn) {
+        setIsBunnyEnabled(false);
+        setMessage('🐱 Ketty\'s turn! Watch what she does!');
+        processKettyTurn();
+      } else {
         setIsBunnyEnabled(true);
-        setMessage('🐰 Your turn! Click Bunny!');
-        console.log('🐰 Bunny enabled - waiting for click');
+        setMessage('🐰 Your turn! Choose A or B for Bunny!');
       }
     }
   }, [currentIndex, gameStatus, isAnimating, currentPattern]);
@@ -330,8 +313,9 @@ const Act4: React.FC = () => {
   };
 
   return (
-    <div className="act-container">
-      <h1 className="act-title">Act 4: Pattern Recognition</h1>
+    <>
+      <div className="act-container">
+        <h1 className="act-title">Act 4: Pattern Recognition</h1>
       
       <div className="game-wrapper">
         {/* Top Bar - Level & Pattern */}
@@ -377,17 +361,18 @@ const Act4: React.FC = () => {
           {/* Controls floating on car */}
           <div className="controls-float">
             <button 
-              className="btn-kitty" 
-              disabled={true}
+              className={`btn-kitty ${isBunnyEnabled ? 'active' : ''}`}
+              onClick={() => handlePlayerClick('A')}
+              disabled={!isBunnyEnabled || isAnimating}
             >
-              🐱 A
+              A {isBunnyEnabled ? '👆' : ''}
             </button>
             <button 
               className={`btn-bunny ${isBunnyEnabled ? 'active' : ''}`}
-              onClick={handleBunnyClick}
+              onClick={() => handlePlayerClick('B')}
               disabled={!isBunnyEnabled || isAnimating}
             >
-              🐰 B {isBunnyEnabled ? '👆' : ''}
+              B {isBunnyEnabled ? '👆' : ''}
             </button>
           </div>
         </div>
@@ -451,6 +436,7 @@ const Act4: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Acts.css';
+import './Act1.css';
 
 const floatingItems = [
   { id: 'carrot', emoji: '🥕' },
@@ -23,8 +23,9 @@ const Act1: React.FC = () => {
   }
 
   return (
-    <div className="act-container">
-      <h1 className="act-title">Act 1: The Discovery</h1>
+    <>
+      <div className="act-container">
+        <h1 className="act-title">Act 1: The Discovery</h1>
       <p className="act-text">
         Pick up the items you find scattered around by clicking on them!
       </p>
@@ -48,7 +49,8 @@ const Act1: React.FC = () => {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

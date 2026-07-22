@@ -368,11 +368,6 @@ const Act3: React.FC = () => {
     addLog('🔄 Game reset!');
   };
 
-  // Clear logs
-  const clearLogs = () => {
-    setLogs([]);
-  };
-
   // Toggle loop mode
   const toggleLoopMode = () => {
     if (isRunning) return;
@@ -383,8 +378,9 @@ const Act3: React.FC = () => {
   };
 
   return (
-    <div className="act-container">
-      <h1 className="act-title">Act 3: Coding Adventure</h1>
+    <>
+      <div className="act-container">
+        <h1 className="act-title">Act 3: Coding Adventure</h1>
       <p className="act-text">
         Program your character to visit 2 shops and return home!
       </p>
@@ -507,12 +503,6 @@ const Act3: React.FC = () => {
             >
               🔄 Reset
             </button>
-            <button 
-              onClick={clearLogs}
-              className="btn-clear"
-            >
-              🗑️ Clear Logs
-            </button>
           </div>
         </div>
 
@@ -562,6 +552,7 @@ const Act3: React.FC = () => {
       </div>
 
     </div>
+    </>
   );
 };
 
